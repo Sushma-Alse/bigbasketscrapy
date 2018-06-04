@@ -12,7 +12,7 @@ import re
 import json
 
 class ProductPriceSpider(scrapy.Spider):
-	name = "bigbasket"
+	name = "extractor"
 
 	def start_requests(self):
 		#List of all urls to be searched. Commenting below code for testing
@@ -39,7 +39,6 @@ class ProductPriceSpider(scrapy.Spider):
 						'args': {'wait': 15.0}
 						}	
                		})
-
 
 	#Function for initially written for parsing url and extended pages
 	#Currently not used
@@ -69,7 +68,7 @@ class ProductPriceSpider(scrapy.Spider):
 	#Parser extracts item product name, quantity, MRP and final price
 	def parse_link(self, response):			
 		self.log(response.url)
-		
+
 		#For list of subcategories of items
 		items = response.css("div.tab-content div.item.prod-deck.row.ng-scope div.clearfix div.ng-scope").extract()
 		
@@ -118,6 +117,7 @@ class ProductPriceSpider(scrapy.Spider):
 			#Product title rows
 			product_titles = []
 			title = response.css("div.uiv2-product-detail-content.wid-250 div.uiv2-product-name h1").extract_first().split("Fresho ")[1].split(" \n")[0]
+
 			product_titles.append(title)
 			self.log(product_titles)
 
@@ -145,3 +145,5 @@ class ProductPriceSpider(scrapy.Spider):
 		with open(fileName, 'a') as f:
 			writer = csv.writer(f)
 			writer.writerows(zip(product_titles, product_measures, product_mrps, product_prices))
+
+			
